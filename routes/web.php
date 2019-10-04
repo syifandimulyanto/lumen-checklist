@@ -20,35 +20,42 @@ $router->post('login', 'AuthController@login');
 
 $router->group(['middleware' => 'auth'], function() use ($router) {
 
-    // Templates data
-    $router->get('checklists/templates', 'TaskController@index');
-    $router->get('checklists/templates/{templateId}', 'TaskController@show');
-    $router->post('checklists/templates', 'TaskController@store');
-    $router->patch('checklists/templates/{templateId}', 'TaskController@update');
-    $router->delete('checklists/templates/{templateId}', 'TaskController@destroy');
+    //checklist/
+    $router->group(['prefix' => 'checklists'], function () use ($router) {
 
-    // Items data
-    $router->get('checklists/items', 'ItemController@index');
-    $router->post('checklists/{checklistId}/items', 'ItemController@store');
-    $router->get('checklists/{checklistId}/items/{itemId}', 'ItemController@show');
-    $router->patch('checklists/{checklistId}/items/{itemId}', 'ItemController@update');
-    $router->delete('checklists/{checklistId}/items/{itemId}', 'ItemController@destroy');
+        $router->group(['prefix' => 'templates'], function () use ($router) {
+            // checklist/templates
+            // Templates data
+            $router->get('/', 'TaskController@index');
+            $router->get('/{templateId}', 'TaskController@show');
+            $router->post('/', 'TaskController@store');
+            $router->patch('/{templateId}', 'TaskController@update');
+            $router->delete('/{templateId}', 'TaskController@destroy');
+        });
 
-    $router->get('checklists/{checklistId}/items', 'ItemController@indexChecklist');
+        // Items data
+        $router->get('/items', 'ItemController@index');
+        $router->post('/{checklistId}/items', 'ItemController@store');
+        $router->get('/{checklistId}/items/{itemId}', 'ItemController@show');
+        $router->patch('/{checklistId}/items/{itemId}', 'ItemController@update');
+        $router->delete('/{checklistId}/items/{itemId}', 'ItemController@destroy');
 
-    $router->get('checklists/items/summaries', 'ItemController@summaries');
-    $router->post('checklists/complete', 'ItemController@complete');
-    $router->post('checklists/incomplete', 'ItemController@incomplete');
+        $router->get('/{checklistId}/items', 'ItemController@indexChecklist');
 
-    $router->post('checklists/{checklistId}/items/_bulk', 'ItemController@bulkUpdate');
+        $router->get('/items/summaries', 'ItemController@summaries');
+        $router->post('/complete', 'ItemController@complete');
+        $router->post('/incomplete', 'ItemController@incomplete');
 
-    // Checklist data
-    $router->get('checklists', 'ChecklistController@index');
-    $router->post('checklists', 'ChecklistController@store');
-    $router->get('checklists/{checklistId}', 'ChecklistController@show');
-    $router->patch('checklists/{checklistId}', 'ChecklistController@update');
-    $router->delete('checklists/{checklistId}', 'ChecklistController@destroy');
+        $router->post('/{checklistId}/items/_bulk', 'ItemController@bulkUpdate');
 
+        // Checklist data
+        $router->get('/', 'ChecklistController@index');
+        $router->post('/', 'ChecklistController@store');
+        $router->get('/{checklistId}', 'ChecklistController@show');
+        $router->patch('/{checklistId}', 'ChecklistController@update');
+        $router->delete('/{checklistId}', 'ChecklistController@destroy');
+
+    });
 });
 
 
